@@ -33,5 +33,10 @@ dependencies {
     // 특정 버전을 명시하지 않아야 상단의 buildscript의 dependencies에 써져있는 springBootVersion을 따라감
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.projectlombok:lombok')
+    // 스프링 부트용 Spring Data JPA 추상화 라이브러리 - JPA 관련 라이브러리 버전 자동 관리
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    // h2 = 인메모리 관계형 데이터베이스, 별도 설치 필요없이 프로젝트 의존성만으로 관리 가능
+    // 메모리에서 실행되기 때문에 애플리케이션 재시작 할 때마다 초기화되므로 테스트 용도로 많이 사용
+    compile('com.h2database:h2')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
