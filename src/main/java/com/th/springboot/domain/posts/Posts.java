@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 // Entity 클래스에서는 절대 Setter 메소드 만들지 않음 -> 값 변경이 필요하면 명확히 목적, 의도를 나타낼 수 있는 메소드 추가
+// Request, Response 클래스로 사용하지 말 것
 // DB에 추가할 때는 생성자를 통해, 값 변경이 필요할 때는 해당 이벤트에 맞는 public 메소드 호출 -> this.status = false; 이런 함수
 
 /**
@@ -50,5 +51,16 @@ public class Posts {
         this.title = title;
         this.content = content;
         this.author = author;
+    }
+
+    /**
+     * 클래스의 상태를 변경하는 것은 자기자신이 해야할 일 => 즉, 저장, 조회 등과 달리 update는 Posts 도메인 안
+     * 게시글 수정
+     * @param title 제목
+     * @param content 내용
+     */
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 }
