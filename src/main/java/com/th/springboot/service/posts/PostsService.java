@@ -2,13 +2,16 @@ package com.th.springboot.service.posts;
 
 import com.th.springboot.domain.posts.Posts;
 import com.th.springboot.domain.posts.PostsRepository;
+import com.th.springboot.web.dto.PostsListResponseDto;
 import com.th.springboot.web.dto.PostsResponseDto;
 import com.th.springboot.web.dto.PostsSaveRequestDto;
 import com.th.springboot.web.dto.PostsUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 트랜잭션과 도메인 간의 순서 보장
@@ -63,5 +66,18 @@ public class PostsService {
                         IllegalArgumentException("해당 사용자가 없습니다. id = " + id));
 
         return new PostsResponseDto(entity);
+    }
+
+    /**
+     * 게시글 목록 조회
+     * Transactional = 트랜잭션 범위는 유지하되 조회기능만 남겨두어 조회 속도 개선
+     *  -> 등록, 수정, 삭제 기능 전혀 없는 곳에서 사용 추천
+     * @return PostsListResponseDto -> List로 변환
+     */
+    @Transactional(readOnly = true)
+    public List<PostsListResponseDto> findAllDesc() {
+        return postsRepository.findAll().stream()
+                .map(PostsListResponseDto::new)
+                .collect(Collectors.toList());
     }
 }

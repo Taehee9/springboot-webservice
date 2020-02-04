@@ -1,6 +1,9 @@
 package com.th.springboot.web;
 
+import com.th.springboot.service.posts.PostsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
@@ -10,9 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
  * Time : 오후 5:19
  * Contact : kwonth9509@gmail.com
  */
+@RequiredArgsConstructor
 @Controller
 public class IndexController {
 
+    private final PostsService postsService;
     /**
      * index 반환 = index.mustache로 전환되어 View Resolver가 처리
      *
@@ -20,7 +25,8 @@ public class IndexController {
      * @return index index
      */
     @GetMapping("/")
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("posts", postsService.findAllDesc());
         return "index";
     }
 
