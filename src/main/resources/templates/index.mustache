@@ -19,10 +19,11 @@
             </tr>
             </thead>
             <tbody id="tbody">
-            {{#posts}} //posts List 순회, for문과 같음
+            <!-- posts list 순회 / for문과 같음 -->
+            {{#posts}}
                 <tr>
                     <td>{{id}}</td>
-                    <td>{{title}}</td>
+                    <td><a href="/posts/update/{{id}}">{{title}}</a></td>
                     <td>{{author}}</td>
                     <td>{{modifiedDate}}</td>
                 </tr>
