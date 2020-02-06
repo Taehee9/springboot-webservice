@@ -47,19 +47,17 @@ public class PostsApiControllerTest {
 
     /**
      * 데이터 다 지우기
-     * @throws Exception exception
      */
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         postsRepository.deleteAll();
     }
 
     /**
      * 게시글 등록 test
-     * @throws Exception exception
      */
     @Test
-    public void posts_register() throws Exception {
+    public void posts_register() {
         // given
         String title = "title";
         String content = "content";
@@ -88,14 +86,13 @@ public class PostsApiControllerTest {
 
     /**
      * 게시글 수정 test
-     * @throws Exception exception
      */
     @Test
-    public void Posts_modified() throws Exception {
+    public void Posts_modified() {
         // given
         Posts savedPosts = postsRepository.save(Posts.builder()
             .title("title")
-            .content("cotent")
+            .content("content")
             .author("author")
             .build());
 
@@ -123,5 +120,29 @@ public class PostsApiControllerTest {
         List<Posts> all = postsRepository.findAll();
         assertThat(all.get(0).getTitle()).isEqualTo(expectedTitle);
         assertThat(all.get(0).getContent()).isEqualTo(expectedContent);
+    }
+
+    /**
+     * 게시글 삭제 test
+     */
+    @Test
+    public void Posts_Delete() {
+        //given
+        Posts savedPosts = postsRepository.save(Posts.builder()
+            .title("title")
+            .author("author")
+            .content("content")
+            .build());
+
+        Long id = savedPosts.getId();
+        String url = "http://localhost:" + port + "/api/v1/posts/" + id;
+
+        //when
+        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE,
+                HttpEntity.EMPTY, Long.class, savedPosts);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isEqualTo(id);
     }
 }
