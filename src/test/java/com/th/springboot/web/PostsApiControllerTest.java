@@ -88,7 +88,7 @@ public class PostsApiControllerTest {
      * 게시글 수정 test
      */
     @Test
-    public void Posts_modified() {
+    public void posts_modified() {
         // given
         Posts savedPosts = postsRepository.save(Posts.builder()
             .title("title")
@@ -126,7 +126,7 @@ public class PostsApiControllerTest {
      * 게시글 삭제 test
      */
     @Test
-    public void Posts_Delete() {
+    public void posts_Delete() {
         //given
         Posts savedPosts = postsRepository.save(Posts.builder()
             .title("title")
@@ -140,6 +140,29 @@ public class PostsApiControllerTest {
         //when
         ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE,
                 HttpEntity.EMPTY, Long.class, savedPosts);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isEqualTo(id);
+    }
+
+    /**
+     * 게시글 조회 tests
+     */
+    @Test
+    public void posts_find() {
+        //given
+        Posts savedPosts = postsRepository.save(Posts.builder()
+            .title("title")
+            .content("content")
+            .author("author")
+            .build());
+
+        Long id = savedPosts.getId();
+        String url = "http://localhost:" + port + "/api/v1/posts/" + id;
+
+        //when
+        ResponseEntity<Long> responseEntity = restTemplate.getForEntity(url, Long.class);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
