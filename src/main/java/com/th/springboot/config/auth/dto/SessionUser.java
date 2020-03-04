@@ -5,6 +5,9 @@ import com.th.springboot.domain.user.User;
 import java.io.Serializable;
 
 /**
+ * 인증된 사용자 정보 들어있는 DTO
+ * User 클래스와 차이점은 직렬화 여부
+ *
  * Created by Taehee Kwon,
  * User : Taehee
  * Date : 2020-03-03

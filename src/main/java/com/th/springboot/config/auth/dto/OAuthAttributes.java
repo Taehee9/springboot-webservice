@@ -8,6 +8,8 @@ import lombok.Getter;
 import java.util.Map;
 
 /**
+ * OAuth2User의 속성(attribute)을 담을 클래스
+ *
  * Created by Taehee Kwon,
  * User : Taehee
  * Date : 2020-03-03
@@ -34,11 +36,24 @@ public class OAuthAttributes {
         this.picture = picture;
     }
 
+    /**
+     *
+     * @param registrationId 등록 ID
+     * @param userNameAttributeName
+     * @param attributes tkdydwk wjdqh
+     * @return 사용자 정보
+     */
     public static OAuthAttributes of(String registrationId, String userNameAttributeName,
                                      Map<String, Object> attributes) {
         return ofGoogle(userNameAttributeName, attributes);
     }
 
+    /**
+     *
+     * @param userNameAttributeName
+     * @param attributes 사용자 정보
+     * @return 사용자 정보
+     */
     private static OAuthAttributes ofGoogle(String userNameAttributeName,
                                             Map<String, Object> attributes) {
          return OAuthAttributes.builder()
@@ -50,6 +65,11 @@ public class OAuthAttributes {
                  .build();
     }
 
+    /**
+     * User Entity -> 처음 가입할 때
+     * 기본 권한은 GUEST
+     * @return 처음 가입시의 User Entity
+     */
     public User toEntity() {
         return User.builder()
                 .name(name)

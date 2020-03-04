@@ -2,11 +2,9 @@ package com.th.springboot.config.auth;
 
 import com.th.springboot.domain.user.Role;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
+ * EnableWebSecurity - Spring Security 설정들 활성화
  *
  * Created by Taehee Kwon,
  * User : Taehee
@@ -20,10 +18,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2UserService customOAuth2UserService;
 
+    /**
+     * url별 권한관리, 로그아웃, 로그인 시 처리 등 설정
+     *
+     * @param http
+     * @throws Exception 예외처리
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .headers().frameOptions().disable()
+        http.csrf().disable().headers().frameOptions().disable()
                 .and()
                     .authorizeRequests()
                     .antMatchers("/", "/css/**", "/images/**",

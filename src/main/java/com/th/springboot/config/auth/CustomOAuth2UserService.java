@@ -18,6 +18,8 @@ import javax.servlet.http.HttpSession;
 import java.util.Collections;
 
 /**
+ * 구글 로그인 후 사용자 정보를 기반으로 가입 및 정보수정, 세션 저장 등의 기능
+ *
  * Created by Taehee Kwon,
  * User : Taehee
  * Date : 2020-03-03
@@ -33,19 +35,24 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
         OAuth2UserService delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
-        String registrationId = userRequest.getClientRegistration(),getRegistrationId();
+        // 현재 로그인 진행 중인 서비스 구분하는 코드(구글인지 네이버인지 카카오인지 등)
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        // 로그인 진행시 키가 되는 필드값
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
                 .getUserInfoEndpoint().getUserNameAttributeName();
 
+        // OAuth2User의 속성을 담을 클래스
         OAuthAttributes attributes = OAuthAttributes.
                 of(registrationId, userNameAttributeName,
                         oAuth2User.getAttributes());
 
         User user = saveOrUpdate(attributes);
 
+        // 세션에 사용자 정보를 저장하기 위한 Dto 클래스
         httpSession.setAttribute("user", new SessionUser(user));
 
         return new DefaultOAuth2User(
@@ -55,11 +62,14 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                         attributes.getNameAttributeKey());
     }
 
+    // 구글 사용자 정보 업데이트 되었을 때
     private User saveOrUpdate(OAuthAttributes attributes) {
         User user = userRepository.findByEmail(attributes.getEmail())
                 .map(entity -> entity.update(attributes.getName(),
-                        attributes.getPicture()));
+                        attributes.getPicture()))
+                .orElse(attributes.toEntity());
 
         return userRepository.save(user);
     }
+
 }
